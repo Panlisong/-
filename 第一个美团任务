@@ -1,0 +1,209 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct Card
+{
+   char dianshu;
+   int flag;                /*是否使用的判断*/
+   int HUASE_flag;
+}card[52];
+
+char DIANSHU[14]="A234567890JQK";
+
+void JM(char choice);
+void Youxi(struct Card *card);
+struct Card *Shezhi(struct Card *card);
+void HUASEPANDUAN(int i);
+int FaPai(struct Card *card);
+int Zhuangjiafenshu(int Yours,int Flag,struct Card *card,int Others);
+void PANDUAN(int Yours,int Others);
+int DIANSHUPANDUAN(int i,struct Card *card);
+
+int main()
+{
+    printf("-------------------欢迎来到志浩俱乐部------------------\n");
+    printf("                    请输入y,n,或q\n");
+
+    char choice;
+    Shezhi(card);
+
+   do                     /*进入游戏*/
+  {
+    choice=getchar();
+    JM(choice);
+  }
+   while(choice!='q');
+
+    getch();
+    return 0;
+}
+
+void JM(char choice)     /*进入界面*/
+{
+    if(choice=='y')
+        {
+            printf("OK\n");
+            Youxi(card);            /*进入游戏*/
+        }
+    else if(choice=='n')
+          printf("Not bad");
+    else if(choice=='q')
+    {
+        printf("ByB！");
+        getch();
+        exit(0);
+    }
+}
+
+struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/    /*设置出了问题*/
+{
+    int i,j;
+
+    for(i=0;i<4;i++)
+        for(j=0;j<13;j++)
+    {
+        card[13*i+j].dianshu=DIANSHU[j];                         /*点数初始化*/
+        card[13*i+j].HUASE_flag=i+1;                             /*花色初始化*/
+        card[13*i+j].flag=1;                                     /*是否使用*/
+    }
+    return card;
+}
+
+void Youxi(struct Card* card)     /*游戏界面*/
+{
+   int Yours=0,Others=0;    /*分数*/
+   static int Flag=0;
+   int i;
+   char Choice;
+
+   while(1)
+   {
+       printf("\n你是否想要下一张牌（请选择Y或是N）\n");
+       Choice=getchar();
+
+       if(Choice=='Y'||Choice=='y')
+        {
+            i=FaPai(card);                     /*发牌*/
+            printf("你");
+            HUASEPANDUAN(card[i].HUASE_flag);
+
+            if(card[i].dianshu=='0')
+                printf("10");
+            else
+            printf("%c\n",card[i].dianshu);
+
+            Yours+=DIANSHUPANDUAN(i,card);
+            printf("你的累计点数：%d",Yours);
+            if(Yours>21)                                   /*自爆判断*/
+            {
+                printf("你的点数超过21，你输了");
+                exit(0);
+            }
+        }
+       else if(Choice=='n'||Choice=='N')
+        Flag+=1;
+        else
+            {
+                printf("请输入Y或是N\n");
+                continue;
+            }
+        printf("\n按任意键继续\n\n");
+        getch();
+        Others+=Zhuangjiafenshu(Yours,Flag,card,Others);          /*表示庄家分数*/
+        printf("庄家的总分:%d\n",Others);
+
+        if(Others>21)
+            {
+                printf("庄家的总点数超过了21，你赢了");
+                exit(0);
+            }                                                       /*庄家是否爆点判断*/
+
+        printf("\n");
+   }
+
+}
+
+
+void HUASEPANDUAN(int i)            /*花色判断*/
+{
+    printf("得到的牌是：");
+    if(i==1)
+        printf("黑桃  ");
+    else if(i==2)
+        printf("红桃  ");
+    else if(i==3)
+        printf("梅花  ");
+    else
+        printf("方块  ");
+}
+
+int FaPai(struct Card *card)         /*发牌环节*/
+{
+    int i;
+
+    do
+    {
+        srand(time(0));
+        i=rand()%52;
+    }
+    while(card[i].flag==0);
+
+    return i;
+};
+
+int Zhuangjiafenshu(int Yours,int Flag,struct Card *card,int Others)     /*庄家发牌以及扑克牌显示*/
+{
+    int i;
+    int j;
+
+    if(Yours>=Others)
+        {
+            i=FaPai(card);
+            printf("庄家");
+            HUASEPANDUAN(card[i].HUASE_flag);
+            if(card[i].dianshu=='0')
+                {
+                    printf("10");
+                    j=DIANSHUPANDUAN(i,card);
+                }
+            else
+            {
+                printf("%c",card[i].dianshu);
+                j=DIANSHUPANDUAN(i,card);
+            }
+        }
+    else
+        {
+            printf("庄家没有要牌 \n");
+            if(Flag==1)
+                    PANDUAN(Yours,Others);     /*两个都不要牌时，进行点数大小判断*/
+        }
+
+    return j;
+}
+
+void PANDUAN(int Yours,int Others)                                      /*庄家以及玩家的点数大小判断*/
+{
+    printf("你的总点数：%d     庄家的总点数：%d \n",Yours,Others);
+    if(Yours>Others)
+        {
+            printf("恭喜你赢了！");
+            exit(0);
+        }
+    else if(Yours<Others)
+        {
+            printf("很遗憾，你输了");
+            exit(0);
+        }
+}
+
+int DIANSHUPANDUAN(int i,struct Card *card)                            /*发牌时的点数判断*/
+{
+    if(card[i].dianshu<='9'&&card[i].dianshu>='2')
+        return atoi(&card[i].dianshu);
+    else if(card[i].dianshu=='J'||card[i].dianshu=='Q'||card[i].dianshu=='K'||card[i].dianshu=='0')
+        return 10;
+    else if(card[i].dianshu=='A')
+        return 11;
+}
