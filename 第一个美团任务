@@ -151,7 +151,7 @@ int FaPai(struct Card *card)         /*发牌环节*/
         i=rand()%52;
     }
     while(card[i].flag==0);
-
+    card[i].flag=0;
     return i;
 };
 
