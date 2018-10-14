@@ -56,7 +56,7 @@ void JM(char choice)     /*进入界面*/
     }
 }
 
-struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/    /*设置出了问题*/
+struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/    
 {
     int i,j;
 
