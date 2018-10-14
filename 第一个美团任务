@@ -56,7 +56,7 @@ void JM(char choice)     /*进入界面*/
     }
 }
 
-struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/   
+struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/    /*设置出了问题*/
 {
     int i,j;
 
@@ -95,21 +95,16 @@ void Youxi(struct Card* card)     /*游戏界面*/
 
             Yours+=DIANSHUPANDUAN(i,card);
             printf("你的累计点数：%d",Yours);
-            if(Yours==21||Others==21)
-            {
-                printf("二者分数均为21，平局");
-                getch();
-                exit(0);
-            }
+
             if(Yours>21)                                   /*自爆判断*/
             {
-                printf("你的点数超过21，你输了");
+                printf("\n你的点数超过21，你输了");
                 getch();
                 exit(0);
             }
         }
        else if(Choice=='n'||Choice=='N')
-        Flag+=1;
+        Flag++;
         else
             {
                 printf("请输入Y或是N\n");
@@ -122,7 +117,7 @@ void Youxi(struct Card* card)     /*游戏界面*/
 
         if(Others>21)
             {
-                printf("庄家的总点数超过了21，你赢了");
+                printf("\n庄家的总点数超过了21，你赢了");
                 getch();
                 exit(0);
             }                                                       /*庄家是否爆点判断*/
@@ -180,32 +175,30 @@ int Zhuangjiafenshu(int Yours,int Flag,struct Card *card,int Others)     /*庄�
                 printf("%c",card[i].dianshu);
                 j=DIANSHUPANDUAN(i,card);
             }
+            return j;
         }
     else
         {
             printf("庄家没有要牌 \n");
             if(Flag==1)
                     PANDUAN(Yours,Others);     /*两个都不要牌时，进行点数大小判断*/
+            return 0;
         }
-
-    return j;
 }
 
 void PANDUAN(int Yours,int Others)                                      /*庄家以及玩家的点数大小判断*/
 {
-    printf("你的总点数：%d     庄家的总点数：%d \n",Yours,Others);
+    printf("你的总点数：%d     庄家的总点数：%d\n",Yours,Others);
+
     if(Yours>Others)
-        {
             printf("恭喜你赢了！");
-            getch();
-            exit(0);
-        }
     else if(Yours<Others)
-        {
             printf("很遗憾，你输了");
-            getch();
-            exit(0);
-        }
+    else
+            printf("\n二者点数相同，平局");
+
+        getch();
+          exit(0);
 }
 
 int DIANSHUPANDUAN(int i,struct Card *card)                            /*发牌时的点数判断*/
