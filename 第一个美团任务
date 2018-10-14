@@ -188,7 +188,7 @@ int Zhuangjiafenshu(int Yours,int Flag,struct Card *card,int Others)     /*庄�
 
 void PANDUAN(int Yours,int Others)                                      /*庄家以及玩家的点数大小判断*/
 {
-    printf("你的总点数：%d     庄家的总点数：%d\n",Yours,Others);
+    printf("\n你的总点数：%d     庄家的总点数：%d\n",Yours,Others);
 
     if(Yours>Others)
             printf("恭喜你赢了！");
