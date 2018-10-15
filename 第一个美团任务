@@ -56,7 +56,7 @@ void JM(char choice)     /*进入界面*/
     }
 }
 
-struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/    
+struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/
 {
     int i,j;
 
@@ -72,8 +72,8 @@ struct Card *Shezhi(struct Card *card)            /*扑克牌初始化*/
 
 void Youxi(struct Card* card)     /*游戏界面*/
 {
-   int Yours=0,Others=0;    /*分数*/
-   static int Flag=0;
+   int Yours=0,Others=0;          /*分数*/
+   static int Flag;
    int i;
    char Choice;
 
@@ -104,7 +104,7 @@ void Youxi(struct Card* card)     /*游戏界面*/
             }
         }
        else if(Choice=='n'||Choice=='N')
-        Flag++;
+          Flag=1;
         else
             {
                 printf("请输入Y或是N\n");
@@ -152,6 +152,7 @@ int FaPai(struct Card *card)         /*发牌环节*/
     }
     while(card[i].flag==0);
     card[i].flag=0;
+
     return i;
 };
 
@@ -180,9 +181,14 @@ int Zhuangjiafenshu(int Yours,int Flag,struct Card *card,int Others)     /*庄�
     else
         {
             printf("庄家没有要牌 \n");
-            if(Flag==1)
-                    PANDUAN(Yours,Others);     /*两个都不要牌时，进行点数大小判断*/
-            return 0;
+              if(Flag==1)
+                    {
+                        PANDUAN(Yours,Others);
+                        getch();
+                        exit(0);
+                    }                                   /*两个都不要牌时，进行点数大小判断*/
+              else
+                return 0;
         }
 }
 
@@ -196,9 +202,6 @@ void PANDUAN(int Yours,int Others)                                      /*庄家
             printf("很遗憾，你输了");
     else
             printf("\n二者点数相同，平局");
-
-        getch();
-          exit(0);
 }
 
 int DIANSHUPANDUAN(int i,struct Card *card)                            /*发牌时的点数判断*/
